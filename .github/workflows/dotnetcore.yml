@@ -1,0 +1,19 @@
+name: publish to nuget
+on:
+  push:
+    branches:
+      - master # Default release branch
+jobs:
+  publish:
+    name: list on nuget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+    
+      # Publish
+      - name: publish on version change
+        uses: rohith/publish-nuget@v2
+        with:
+          PROJECT_FILE_PATH: Framework.DB.MongoDB.Repository.csproj # Relative to repository root
+          NUGET_KEY: ${{secrets.NUGET_API_KEY}} # nuget.org API key
+          PACKAGE_NAME: Unicreo.Framework.Db.MongoDB.Repository
