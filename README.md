@@ -164,8 +164,8 @@ using (var session = _dataRepository.StartSession())
     var todo2 = new ToDo {Name = "sell smth"};
 
     try {
-        await _dataRepository.AddAsync(todo1);
-        await _dataRepository.AddAsync(todo2);
+        await _dataRepository.AddAsync(todo1, session);
+        await _dataRepository.AddAsync(todo2, session);
         await session.CommitTransactionAsync();        
     }
     catch {
