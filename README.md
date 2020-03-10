@@ -154,6 +154,8 @@ Methods those you can use in transactions:
 - UpdateOneAsync
 - DeleteAsync
 
+**Note: you should pass session object in every method that you want to use in transaction.**
+
 Example:
 
 ```c#
