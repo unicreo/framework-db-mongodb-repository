@@ -2,6 +2,12 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>Unicreo.Framework.Db.MongoDB.Repository</PackageId>
+        <Version>1.0.0</Version>
+        <Authors>Yevhenii Prodan</Authors>
+        <Authors>Alexander Bikk</Authors>
+        <Company>Unicreo</Company>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
