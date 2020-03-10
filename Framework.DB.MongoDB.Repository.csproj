@@ -5,6 +5,7 @@
         <PackageId>Unicreo.Framework.Db.MongoDB.Repository</PackageId>
         <Version>1.0.0</Version>
         <Authors>Yevhenii Prodan; Alexander Bikk;</Authors>
+        <RepositoryUrl>https://github.com/unicreo/framework-db-mongodb-repository</RepositoryUrl>
         <Company>Unicreo</Company>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageDescription>
