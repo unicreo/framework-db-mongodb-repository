@@ -191,5 +191,5 @@ that implement next interface:
     }
 ``` 
 
-Usage and information about usage IMongoCollection, IMongoQueryable,
+Information about usage IMongoCollection, IMongoQueryable,
  IMongoDatabase, IMongoClient you can find [here](https://mongodb.github.io/mongo-csharp-driver/2.10).
