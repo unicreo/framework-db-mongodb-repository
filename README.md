@@ -11,7 +11,7 @@ Based on MongoDb.Driver 2.10.2
 
 **Use DI for config.**
 
-You have to implement `ICollectionNameProvider` interface that has
+You have to implement [`ICollectionNameProvider`](https://github.com/unicreo/framework-db-mongodb-repository/blob/master/Source/Interfaces/ICollectionNameProvider.cs) interface that has
 to implement `string GetCollectionName(Type entityType)` method which
 allows to get name of collection in mongodb by type.
 
@@ -36,7 +36,7 @@ services.AddTransient<IMongoDbDataRepository, MongoDbDataRepository>();
 
 ## Usage
 
-All mongodb entities should be inherited from `BaseEntity` that contain ObjectId as Id.
+All mongodb entities should be inherited from [BaseEntity](https://github.com/unicreo/framework-db-mongodb-repository/blob/master/Source/Models/BaseEntity.cs) that contain ObjectId as Id.
 
 ```c#
 public class ToDo: BaseEntity {
