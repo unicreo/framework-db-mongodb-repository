@@ -11,13 +11,13 @@ Based on MongoDb.Driver 2.10.2
 
 **Use DI for config.**
 
-You have to implement `ICollectionNameProvider` interface that have
+You have to implement `ICollectionNameProvider` interface that has
 to implement `string GetCollectionName(Type entityType)` method which
-allow to get name of collection in mongodb by type.
+allows to get name of collection in mongodb by type.
 
 Also you have to set connection string to your mongodb.
 
-And you should to set logger;
+And you should set logger;
 
 **Example:**
 
@@ -146,7 +146,7 @@ await _dataRepository.DeleteAsync(todo);
 
 You also can use transactions
 
-Methods those you can use in transactions:
+Methods you can use in transactions:
 
 - AddAsync
 - AddListAsync
@@ -178,7 +178,7 @@ using (var session = _dataRepository.StartSession())
 
 ### MongoDbContext
 For deeper usage of database you can use MongoDbContext
-that implement next interface:
+that implements next interface:
 
 ```c#
     interface IMongoDbContext
