@@ -4,10 +4,10 @@ This library is representation of repository pattern in .net core for MongoDB us
 Based on MongoDb.Driver 2.10.2
 ## Install
 
-- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.0`
-- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.0`
-- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.0" />`
-- Packet CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.0`
+- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.1`
+- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.1`
+- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.1" />`
+- Paket CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.1`
 
 ## Configure
 
@@ -98,6 +98,17 @@ var todo = await _dataRepository.GetDocumentAsync<ToDo>(id); //you should ensure
 ```c#
 var todo = await _dataRepository.GetDocumentAsync<ToDo>(item => item.Id == ObjectId.Parse(id) && !item.Done);
 ```
+
+Also in get methods you can use projection
+```c#
+var projection = Builders<ToDo>.Projection
+    .include(entity => entity.Name)
+    .Exclude(entity => entity.Done);
+
+var todo = await _dataRepository.GetDocumentAsync<ToDo>(id, projection);
+```
+
+It works for GetList methods too.
 
 GetList:
 

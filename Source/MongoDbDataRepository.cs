@@ -28,9 +28,10 @@ namespace Framework.DB.MongoDB.Repository
         /// Get document of type T from db by Id for reading
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="projection"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public async Task<T> GetDocumentAsync<T>(string id) where T : IBaseEntity<ObjectId>
+        public async Task<T> GetDocumentAsync<T>(string id, ProjectionDefinition<T> projection = null) where T : IBaseEntity<ObjectId>
         {
             var cursor = await DbContext.GetCollection<T>().FindAsync(_ => _.Id == ObjectId.Parse(id));
             var result = await cursor.FirstOrDefaultAsync();
@@ -41,11 +42,17 @@ namespace Framework.DB.MongoDB.Repository
         /// Get list of objects of type T from db only for reading
         /// </summary>
         /// <param name="filter">Filter a sequense of values based on a predicate</param>
-        public async Task<T> GetDocumentAsync<T>(Expression<Func<T, bool>> filter = null) where T : class
+        /// <param name="projection"></param>
+        public async Task<T> GetDocumentAsync<T>(Expression<Func<T, bool>> filter = null, ProjectionDefinition<T> projection = null) where T : class
         {
             if (filter == null) filter = (_ => true);
-            var cursor = await DbContext.GetCollection<T>().FindAsync(filter);
-            var result = await cursor.FirstOrDefaultAsync();
+            var query = DbContext.GetCollection<T>().Find(filter);
+            if (projection != null)
+            {
+                query.Options.Projection = projection;
+            }
+
+            var result = await query.FirstOrDefaultAsync();
             return result;
         }
 
@@ -55,10 +62,11 @@ namespace Framework.DB.MongoDB.Repository
         /// <param name="take"></param>
         /// <param name="filter">Filter a sequense of values based on a predicate</param>
         /// <param name="skip"></param>
+        /// <param name="projection"></param>
         public async Task<IEnumerable<T>> GetListAsync<T>(
             int? skip = null,
             int? take = null,
-            Expression<Func<T, bool>> filter = null) where T : class
+            Expression<Func<T, bool>> filter = null,  ProjectionDefinition<T> projection = null) where T : class
         {
             if (filter == null) filter = (_ => true);
             var query = DbContext.GetCollection<T>().Find(filter);
@@ -66,6 +74,11 @@ namespace Framework.DB.MongoDB.Repository
             {
                 query.Skip(skip).Limit(take);
             }
+            if (projection != null)
+            {
+                query.Options.Projection = projection;                    
+            }
+
             return await query.ToListAsync();
         }
 
@@ -73,11 +86,17 @@ namespace Framework.DB.MongoDB.Repository
         /// Get list of objects of type T from db only for reading
         /// </summary>
         /// <param name="filter">Filter a sequense of values based on a predicate</param>
+        /// <param name="projection"></param>
         public async Task<IEnumerable<T>> GetListAsync<T>(
-            Expression<Func<T, bool>> filter) where T : class
+            Expression<Func<T, bool>> filter, ProjectionDefinition<T> projection = null) where T : class
         {
             if (filter == null) filter = (_ => true);
             var query = DbContext.GetCollection<T>().Find(filter);
+            if (projection != null)
+            {
+                query.Options.Projection = projection;                    
+            }
+
             return await query.ToListAsync();
         }
 
