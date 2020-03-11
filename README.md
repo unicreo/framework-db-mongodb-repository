@@ -4,10 +4,10 @@ This library is representation of repository pattern in .net core for MongoDB us
 Based on MongoDb.Driver 2.10.2
 ## Install
 
-- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.1`
-- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.1`
-- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.1" />`
-- Paket CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.1`
+- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.2`
+- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.2`
+- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.2" />`
+- Paket CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.2`
 
 ## Configure
 

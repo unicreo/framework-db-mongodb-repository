@@ -4,7 +4,8 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace Framework.DB.MongoDB.Repository.Models
 {
     
-    public class BaseEntity
+    [BsonDiscriminator(RootClass = true)]
+    public class BaseEntity : TimeStampEntity, IBaseEntity<ObjectId>
     {
         public BaseEntity() : base()
         {
@@ -14,4 +15,5 @@ namespace Framework.DB.MongoDB.Repository.Models
         [BsonId]
         public ObjectId Id { get; set; }
     }
+
 }
