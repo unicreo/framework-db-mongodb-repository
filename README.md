@@ -42,7 +42,7 @@ All mongodb entities should be inherited from [BaseEntity](https://github.com/un
 
 ```c#
 public class ToDo: BaseEntity {
-    public Name { get; set;}
+    public string Name { get; set;}
     public bool Done { get; set; } = false; 
 }
 ```
@@ -102,7 +102,7 @@ var todo = await _dataRepository.GetDocumentAsync<ToDo>(item => item.Id == Objec
 Also in get methods you can use projection
 ```c#
 var projection = Builders<ToDo>.Projection
-    .include(entity => entity.Name)
+    .Include(entity => entity.Name)
     .Exclude(entity => entity.Done);
 
 var todo = await _dataRepository.GetDocumentAsync<ToDo>(id, projection);
