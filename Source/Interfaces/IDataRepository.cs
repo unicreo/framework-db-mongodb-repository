@@ -15,19 +15,35 @@ namespace Framework.DB.MongoDB.Repository
         Task<IEnumerable<T>> GetListAsync<T>(int? skip = null, int? take = null, Expression<Func<T, bool>> filter = null, ProjectionDefinition<T> projection = null) where T : class;
         Task<IEnumerable<T>> GetListAsync<T>(Expression<Func<T, bool>> filter, ProjectionDefinition<T> projection = null) where T : class;
         Task AddAsync<T>(T entity) where T : class;
+        Task AddAsync<T>(T entity, IClientSessionHandle session) where T : class;
         Task AddListAsync<T>(IEnumerable<T> entities) where T : class;
+        Task AddListAsync<T>(IEnumerable<T> entities, IClientSessionHandle session) where T : class;
         Task UpdateAsync<T, TKey>(T entity)
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey>;
+        
+        Task UpdateAsync<T, TKey>(T entity, IClientSessionHandle session)
             where T : IBaseEntity<TKey>
             where TKey : IEquatable<TKey>; 
         
         Task UpdateAsync<T>(T entity)
             where T : IBaseEntity<ObjectId>;
         
+        Task UpdateAsync<T>(T entity, IClientSessionHandle session)
+            where T : IBaseEntity<ObjectId>;
+        
         Task DeleteAsync<T, TKey>(T entity)
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey>;
+        
+        Task DeleteAsync<T, TKey>(T entity, IClientSessionHandle session)
             where T : IBaseEntity<TKey>
             where TKey : IEquatable<TKey>;
 
         Task DeleteAsync<T>(T entity)
+            where T : IBaseEntity<ObjectId>;
+        
+        Task DeleteAsync<T>(T entity, IClientSessionHandle session)
             where T : IBaseEntity<ObjectId>;
 
     }
