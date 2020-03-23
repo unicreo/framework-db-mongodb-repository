@@ -5,7 +5,7 @@ namespace Framework.DB.MongoDB.Repository.Models
 {
     
     [BsonDiscriminator(RootClass = true)]
-    public class BaseEntity : TimeStampEntity, IBaseEntity<ObjectId>
+    public class BaseEntity :  IBaseEntity<ObjectId>
     {
         public BaseEntity() : base()
         {
