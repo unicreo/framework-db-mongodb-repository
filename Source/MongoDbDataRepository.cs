@@ -33,8 +33,13 @@ namespace Framework.DB.MongoDB.Repository
         /// <returns></returns>
         public async Task<T> GetDocumentAsync<T>(string id, ProjectionDefinition<T> projection = null) where T : IBaseEntity<ObjectId>
         {
-            var cursor = await DbContext.GetCollection<T>().FindAsync(_ => _.Id == ObjectId.Parse(id));
-            var result = await cursor.FirstOrDefaultAsync();
+            var query = DbContext.GetCollection<T>().Find(_ => _.Id == ObjectId.Parse(id));
+            if (projection != null)
+            {
+                query.Options.Projection = projection;
+            }
+
+            var result = await query.FirstOrDefaultAsync();
             return result;
         }
 
