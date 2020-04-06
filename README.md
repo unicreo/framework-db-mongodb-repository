@@ -6,10 +6,10 @@ Based on MongoDb.Driver 2.10.2
 [![NuGet](https://img.shields.io/nuget/v/Unicreo.Framework.Db.MongoDB.Repository)](https://www.nuget.org/packages/Unicreo.Framework.Db.MongoDB.Repository/)
 ## Install
 
-- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.4`
-- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.4`
-- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.4" />`
-- Paket CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.4`
+- Package Manager:   `Install-Package Unicreo.Framework.Db.MongoDB.Repository -Version 1.0.5`
+- .NET CLI: `dotnet add package Unicreo.Framework.Db.MongoDB.Repository --version 1.0.5`
+- PackageReference `<PackageReference Include="Unicreo.Framework.Db.MongoDB.Repository" Version="1.0.5" />`
+- Paket CLI `paket add Unicreo.Framework.Db.MongoDB.Repository --version 1.0.5`
 
 ## Configure
 
