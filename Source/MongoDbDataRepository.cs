@@ -7,11 +7,10 @@ using Framework.DB.MongoDB.Repository.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using IClientSessionHandle = MongoDB.Driver.IClientSessionHandle;
 
 namespace Framework.DB.MongoDB.Repository
 {
-    public class MongoDbDataRepository: IMongoDbDataRepository
+    public class MongoDbDataRepository : IMongoDbDataRepository
     {
         protected readonly IMongoDbContext DbContext;
         protected readonly ILogger<MongoDbDataRepository> Logger;
@@ -43,6 +42,7 @@ namespace Framework.DB.MongoDB.Repository
             return result;
         }
 
+
         /// <summary>
         /// Get list of objects of type T from db only for reading
         /// </summary>
@@ -60,6 +60,7 @@ namespace Framework.DB.MongoDB.Repository
             var result = await query.FirstOrDefaultAsync();
             return result;
         }
+
 
         /// <summary>
         /// Get list of objects of type T from db only for reading
@@ -86,6 +87,7 @@ namespace Framework.DB.MongoDB.Repository
 
             return await query.ToListAsync();
         }
+
 
         /// <summary>
         /// Get list of objects of type T from db only for reading
@@ -134,6 +136,7 @@ namespace Framework.DB.MongoDB.Repository
         public async Task AddListAsync<T>(IEnumerable<T> entities) where T : class =>
             await DbContext.GetCollection<T>().InsertManyAsync(entities);
         
+
         /// <summary>
         /// Insert list of entities in db asynchronously
         /// </summary>
@@ -144,6 +147,7 @@ namespace Framework.DB.MongoDB.Repository
         public async Task AddListAsync<T>(IEnumerable<T> entities, IClientSessionHandle session) where T : class =>
             await DbContext.GetCollection<T>().InsertManyAsync(session, entities);
  
+
         /// <summary>
         /// Update entity asynchronously
         /// </summary>
@@ -154,6 +158,7 @@ namespace Framework.DB.MongoDB.Repository
             where TKey : IEquatable<TKey> =>
                 await DbContext.GetCollection<T>().ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity);
         
+
         /// <summary>
         /// Update entity asynchronously
         /// </summary>
@@ -163,9 +168,9 @@ namespace Framework.DB.MongoDB.Repository
         /// <typeparam name="TKey"></typeparam>
         /// <returns></returns>
         public async Task UpdateAsync<T, TKey>(T entity, IClientSessionHandle session)
-         where T : IBaseEntity<TKey>
-         where TKey : IEquatable<TKey> =>
-             await DbContext.GetCollection<T>().ReplaceOneAsync(session,x => x.Id.Equals(entity.Id), entity);
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey> =>
+                await DbContext.GetCollection<T>().ReplaceOneAsync(session,x => x.Id.Equals(entity.Id), entity);
 
 
         /// <summary>
@@ -174,7 +179,7 @@ namespace Framework.DB.MongoDB.Repository
         /// <param name="entity">Db entity of type T</param>
         /// <param name="collectionName">Name of collection in db (by default is name of T)</param>
         public async Task UpdateAsync<T>(T entity)
-          where T : IBaseEntity<ObjectId> =>
+            where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().ReplaceOneAsync(x => x.Id.Equals(entity.Id), entity);
         
         /// <summary>
@@ -185,7 +190,7 @@ namespace Framework.DB.MongoDB.Repository
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public async Task UpdateAsync<T>(T entity, IClientSessionHandle session)
-          where T : IBaseEntity<ObjectId> =>
+            where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().ReplaceOneAsync(session,x => x.Id.Equals(entity.Id), entity);
 
 
@@ -228,7 +233,7 @@ namespace Framework.DB.MongoDB.Repository
         /// <param name="update">The update definition for the document</param>
         /// <returns></returns>
         public async Task UpdateOneAsync<T>(T entityToModify, UpdateDefinition<T> update)
-          where T : IBaseEntity<ObjectId> =>
+            where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().UpdateOneAsync(x => x.Id.Equals(entityToModify.Id), update);
         
         
@@ -241,12 +246,12 @@ namespace Framework.DB.MongoDB.Repository
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public async Task UpdateOneAsync<T>(T entityToModify, UpdateDefinition<T> update, IClientSessionHandle session)
-          where T : IBaseEntity<ObjectId> =>
+             where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().UpdateOneAsync(session,x => x.Id.Equals(entityToModify.Id), update);
-            
+
 
         /// <summary>
-        /// Updates the property field with the given value update a property field in entities.
+        /// Takes a document you want to modify and updates the field in entity with the given value.
         /// </summary>
         /// <typeparam name="T">The type representing a Document</typeparam>
         /// <typeparam name="TKey">The type of the primary key for a Document</typeparam>
@@ -256,16 +261,30 @@ namespace Framework.DB.MongoDB.Repository
         /// <param name="value">The value of updated field</param>
         /// <returns></returns>
         public async Task UpdateOneAsync<T, TKey, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value)
-          where T : IBaseEntity<TKey>
-          where TKey : IEquatable<TKey> =>
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey> =>
                 await DbContext.GetCollection<T>().UpdateOneAsync(x => x.Id.Equals(entityToModify.Id), Builders<T>.Update.Set(field, value));
-
-        public async Task UpdateOneAsync<T, TKey, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session) where T : IBaseEntity<TKey> where TKey : IEquatable<TKey> =>
-            await DbContext.GetCollection<T>().UpdateOneAsync(session,x => x.Id.Equals(entityToModify.Id), Builders<T>.Update.Set(field, value));
 
 
         /// <summary>
-        /// Updates the property field with the given value update a property field in entities.
+        /// Takes a document you want to modify and updates the field in entity with the given value with MongoDb session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="entityToModify"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public async Task UpdateOneAsync<T, TKey, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
+            where T : IBaseEntity<TKey> 
+            where TKey : IEquatable<TKey> =>
+                await DbContext.GetCollection<T>().UpdateOneAsync(session,x => x.Id.Equals(entityToModify.Id), Builders<T>.Update.Set(field, value));
+
+
+        /// <summary>
+        /// Takes a document you want to modify and updates the field in entity with the given value.
         /// </summary>
         /// <typeparam name="T">The type representing a Document</typeparam>
         /// <typeparam name="TField">The updated type of field</typeparam>
@@ -274,13 +293,12 @@ namespace Framework.DB.MongoDB.Repository
         /// <param name="value">The value of updated field</param>
         /// <returns></returns>
         public async Task UpdateOneAsync<T, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value)
-         where T : IBaseEntity<ObjectId> =>
+            where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().UpdateOneAsync(x => x.Id.Equals(entityToModify.Id), Builders<T>.Update.Set(field, value));
-        
-        
-        
+
+
         /// <summary>
-        /// Updates the property field with the given value update a property field in entities with session
+        /// Takes a document you want to modify and updates the field in entity with the given value with MongoDb session.
         /// </summary>
         /// <param name="entityToModify"></param>
         /// <param name="field"></param>
@@ -290,9 +308,125 @@ namespace Framework.DB.MongoDB.Repository
         /// <typeparam name="TField"></typeparam>
         /// <returns></returns>
         public async Task UpdateOneAsync<T, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
-         where T : IBaseEntity<ObjectId> =>
+            where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().UpdateOneAsync(session,x => x.Id.Equals(entityToModify.Id), Builders<T>.Update.Set(field, value));
-        
+
+
+        /// <summary>
+        /// Takes documents you want to modify and applies the update you have defined in MongoDb.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TKey>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey> =>
+                await DbContext.GetCollection<T>().UpdateManyAsync(filter, update);
+
+
+        /// <summary>
+        /// Takes documents you want to modify and applies the update you have defined in MongoDb with session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TKey>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, IClientSessionHandle session)
+           where T : IBaseEntity<TKey>
+           where TKey : IEquatable<TKey> =>
+               await DbContext.GetCollection<T>().UpdateManyAsync(session, filter, update);
+
+
+        /// <summary>
+        /// Takes documents you want to modify and applies the update you have defined in MongoDb.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
+            where T : IBaseEntity<ObjectId> => 
+                await DbContext.GetCollection<T>().UpdateManyAsync(filter, update);
+
+
+        /// <summary>
+        /// Takes documents you want to modify and applies the update you have defined in MongoDb with session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="update"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, IClientSessionHandle session)
+            where T : IBaseEntity<ObjectId> =>
+                await DbContext.GetCollection<T>().UpdateManyAsync(session, filter, update);
+
+
+        /// <summary>
+        /// Takes documents you want to modify and updates the field in entities with the given value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TKey, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value)
+          where T : IBaseEntity<TKey>
+          where TKey : IEquatable<TKey> =>
+              await DbContext.GetCollection<T>().UpdateManyAsync(filter, Builders<T>.Update.Set(field, value));
+
+
+        /// <summary>
+        /// Takes documents you want to modify and updates the field in entities with the given value with MongoDb session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TKey, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
+            where T : IBaseEntity<TKey>
+            where TKey : IEquatable<TKey> =>
+                await DbContext.GetCollection<T>().UpdateManyAsync(session, filter, Builders<T>.Update.Set(field, value));
+
+
+        /// <summary>
+        /// Takes documents you want to modify and updates the field in entities with the given value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value)
+            where T : IBaseEntity<ObjectId> =>
+                await DbContext.GetCollection<T>().UpdateManyAsync(filter, Builders<T>.Update.Set(field, value));
+
+
+        /// <summary>
+        /// Takes documents you want to modify and updates the field in entities with the given value with MongoDb session.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TField"></typeparam>
+        /// <param name="filter"></param>
+        /// <param name="field"></param>
+        /// <param name="value"></param>
+        /// <param name="session"></param>
+        /// <returns></returns>
+        public async Task UpdateManyAsync<T, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
+            where T : IBaseEntity<ObjectId> =>
+                await DbContext.GetCollection<T>().UpdateManyAsync(session, filter, Builders<T>.Update.Set(field, value));
+
 
         /// <summary>
         /// Delete entity asynchronously
@@ -303,8 +437,7 @@ namespace Framework.DB.MongoDB.Repository
             where T : IBaseEntity<TKey>
             where TKey : IEquatable<TKey> =>
                 await DbContext.GetCollection<T>().DeleteOneAsync(x => x.Id.Equals(entity.Id));
-        
-        
+                
         
         /// <summary>
         /// Delete entity asynchronously with session
@@ -341,6 +474,12 @@ namespace Framework.DB.MongoDB.Repository
             where T : IBaseEntity<ObjectId> =>
                 await DbContext.GetCollection<T>().DeleteOneAsync(session,x => x.Id.Equals(entity.Id));
 
+
+        /// <summary>
+        /// Initialize database collections with given collection names
+        /// </summary>
+        /// <param name="collectionNames"></param>
+        /// <returns></returns>
         public async Task Initialize(IEnumerable<string> collectionNames)
         {
             var availableTables = DbContext.Database.ListCollectionNames().ToList();
