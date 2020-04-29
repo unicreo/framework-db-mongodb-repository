@@ -168,14 +168,14 @@ the same operation with builders
 
 ```c#
 var update = Builders<ToDo>.Update.Set(entity => entity.Name, "new name");
-await _dataRepository.UpdateManyAsync<ToDo, string>(todo => todo.Any(e => e.CreatedDate <= new DateTime.Now), update);
+await _dataRepository.UpdateManyAsync<ToDo>(todo => todo.Any(e => e.CreatedDate <= new DateTime.Now), update);
 ```
 
 _Tip: if your field is an array and you want to change only one item of this array, you can access the item by passing an index **array[index]** or use a positional operator - **$**. The positional $ operator acts as a placeholder for the first element that matches the query document. In C# Mongo.Driver positional operator is **array[-1]**._
 
 ```c#
 var update = Builders<ToDo>.Update.Set(entity => entity.Comments[-1].Message, "new message");
-await _dataRepository.UpdateManyAsync<ToDo, string>(todo => todo.Comments.Any(comment => comment.authorId == userId), update);
+await _dataRepository.UpdateManyAsync<ToDo>(todo => todo.Comments.Any(comment => comment.authorId == userId), update);
 ```
 
 this operation sets the message of the first comment with authorId equals userId in **all** todos
