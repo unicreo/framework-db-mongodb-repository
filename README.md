@@ -61,9 +61,9 @@ public class ToDoService {
 }
 ```
 
-**Some examples of usage:**
+## Examples
 
-Initialize collections:
+**Initialize collections:**
 
 ```c#
 var collectionNames = new List<string> {"ToDos", "Users"}; // better way is to get names from CollectionNameProvider
@@ -71,14 +71,14 @@ await _dataRepository.Initialize(collectionNames);
 
 ```
 
-Create entity:
+**Create entity:**
 
 ```c#
 var todo = new ToDo { Name = "buy smth"};
 await _dataRepository.AddAsync(todo);
 ```
 
-Create list:
+**Create list:**
 
 ```c#
 var todoList = new List<ToDo> {
@@ -90,7 +90,7 @@ await _dataRepository.AddListAsync(todoList);
 ```
 
 
-Get entity:
+**Get entity:**
 
 ```c#
 string id = ObjectId.GenerateNewId().ToString();
@@ -112,7 +112,7 @@ var todo = await _dataRepository.GetDocumentAsync<ToDo>(id, projection);
 
 It works for GetList methods too.
 
-GetList:
+**GetList:**
 
 with pagination
 
@@ -127,14 +127,14 @@ without pagination
 var todoList = await _dataRepository.GetListAsync(entry => !entry.Done);
 ```
 
-Update:
+**Update:**
 ```c#
 var todo = await _dataRepository.GetDocumentAsync<ToDo>(id);
 todo.Name = "New name";
 await _dataRepository.UpdateAsync<ToDo>(todo);
 ```
 
-Update one:
+**Update one:**
 
 allow to update only one property
 
@@ -150,7 +150,37 @@ var update = Builders<ToDo>.Update.Set(entity => entity.Name, "new name");
 await _dataRepository.UpdateOneAsync(todo, update);
 ```
 
-Delete:
+_Tip: with builders you can update multiple fields at once_
+```c#
+var update = Builders<ToDo>.Update.Set(entity => entity.Name, "new name").Set(entity => entity.Title, "new title");
+```
+
+**Update many:**
+
+takes documents you want to modify and updates the field in documents with the given value
+
+```c#
+await _dataRepository.UpdateManyAsync<ToDo, string>(todo => todo.Any(e => e.CreatedDate <= new DateTime.Now), todo => todo.Name, "new name");
+```
+this operation sets a new name to all created before todos 
+
+the same operation with builders
+
+```c#
+var update = Builders<ToDo>.Update.Set(entity => entity.Name, "new name");
+await _dataRepository.UpdateManyAsync<ToDo>(todo => todo.Any(e => e.CreatedDate <= new DateTime.Now), update);
+```
+
+_Tip: if your field is an array and you want to change only one item of this array, you can access the item by passing an index **array[index]** or use a positional operator - **$**. The positional $ operator acts as a placeholder for the first element that matches the query document. In C# Mongo.Driver positional operator is **array[-1]**._
+
+```c#
+var update = Builders<ToDo>.Update.Set(entity => entity.Comments[-1].Message, "new message");
+await _dataRepository.UpdateManyAsync<ToDo>(todo => todo.Comments.Any(comment => comment.authorId == userId), update);
+```
+
+this operation sets the message of the first comment with authorId equals userId in **all** todos
+
+**Delete:**
 
 ```c#
 var todo = await _dataRepository.GetDocumentAsync<ToDo>(id);
@@ -167,6 +197,7 @@ Methods you can use in transactions:
 - AddListAsync
 - UpdateAsync
 - UpdateOneAsync
+- UpdateManyAsync
 - DeleteAsync
 
 **Note: you should pass session object in every method that you want to use in transaction.**
