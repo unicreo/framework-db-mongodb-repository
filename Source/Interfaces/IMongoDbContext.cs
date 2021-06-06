@@ -11,6 +11,6 @@ namespace Framework.DB.MongoDB.Repository
         IMongoQueryable<T> GetQueryableCollection<T>();
         IMongoDatabase Database { get; }
         IMongoClient Client { get; }
-        Task CreateCollectionsAsync(IEnumerable<string> collectionNames);
+        Task Initialize(IEnumerable<string> collectionNames);
     }
 }

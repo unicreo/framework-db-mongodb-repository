@@ -3,70 +3,41 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Framework.DB.MongoDB.Repository.Models;
-using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Framework.DB.MongoDB.Repository
 {
-    public interface IMongoDbDataRepository : IDataRepository
+    /// <summary>
+    /// Mongo DB concrete repository interface, with mongo db related extensions and string as a Id Key 
+    /// </summary>
+    /// <typeparam name="T">Entity type</typeparam>    
+    public interface IMongoDbDataRepository<T> : IDataRepository<T, string>
+        where T : IBaseEntity<string>
     {
         IClientSessionHandle StartSession();
 
-        Task Initialize(IEnumerable<string> collectionNames);
+        Task<T> GetAsync(string id, ProjectionDefinition<T> projection = null);
 
-        Task UpdateOneAsync<T, TKey>(T entityToModify, UpdateDefinition<T> update)
-            where T : IBaseEntity<TKey>
-            where TKey : IEquatable<TKey>; 
-        
-        Task UpdateOneAsync<T, TKey>(T entityToModify, UpdateDefinition<T> update, IClientSessionHandle session)
-            where T : IBaseEntity<TKey>
-            where TKey : IEquatable<TKey>;
-        Task UpdateOneAsync<T>(T entityToModify, UpdateDefinition<T> update)
-            where T : IBaseEntity<ObjectId>;
-        
-        Task UpdateOneAsync<T>(T entityToModify, UpdateDefinition<T> update, IClientSessionHandle sessionHandle)
-            where T : IBaseEntity<ObjectId>;
+        Task<T> GetAsync(Expression<Func<T, bool>> filter, ProjectionDefinition<T> projection = null);
 
-        Task UpdateOneAsync<T, TKey, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value)
-            where T : IBaseEntity<TKey>
-            where TKey : IEquatable<TKey>;
+        Task<IEnumerable<T>> GetListAsync(int? skip = null, int? take = null, Expression<Func<T, bool>> filter = null, ProjectionDefinition<T> projection = null);
 
-        Task UpdateOneAsync<T, TKey, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
-            where T : IBaseEntity<TKey>
-            where TKey : IEquatable<TKey>;
+        Task AddAsync(T entity, IClientSessionHandle session);
 
-        Task UpdateOneAsync<T, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value)
-            where T : IBaseEntity<ObjectId>;
-        
-        Task UpdateOneAsync<T, TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
-            where T : IBaseEntity<ObjectId>;
+        Task UpdateOneAsync(T entityToModify, UpdateDefinition<T> update);
 
-        Task UpdateManyAsync<T, TKey>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
-           where T : IBaseEntity<TKey>
-           where TKey : IEquatable<TKey>;
+        Task UpdateOneAsync(T entityToModify, UpdateDefinition<T> update, IClientSessionHandle session);
 
-        Task UpdateManyAsync<T, TKey>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, IClientSessionHandle session)
-           where T : IBaseEntity<TKey>
-           where TKey : IEquatable<TKey>;
+        Task UpdateOneAsync<TField>(T entityToModify, Expression<Func<T, TField>> field, TField value);
 
-        Task UpdateManyAsync<T>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update)
-           where T : IBaseEntity<ObjectId>;
+        Task UpdateOneAsync<TField>(T entityToModify, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session);
 
-        Task UpdateManyAsync<T>(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, IClientSessionHandle session)
-            where T : IBaseEntity<ObjectId>;
+        Task UpdateManyAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update);
 
-        Task UpdateManyAsync<T, TKey, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value)
-          where T : IBaseEntity<TKey>
-          where TKey : IEquatable<TKey>;
+        Task UpdateManyAsync(Expression<Func<T, bool>> filter, UpdateDefinition<T> update, IClientSessionHandle session);
 
-        Task UpdateManyAsync<T, TKey, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
-            where T : IBaseEntity<TKey>
-            where TKey : IEquatable<TKey>;
+        Task UpdateManyAsync<TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value);
 
-        Task UpdateManyAsync<T, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value)
-            where T : IBaseEntity<ObjectId>;
-
-        Task UpdateManyAsync<T, TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session)
-            where T : IBaseEntity<ObjectId>;
+        Task UpdateManyAsync<TField>(Expression<Func<T, bool>> filter, Expression<Func<T, TField>> field, TField value, IClientSessionHandle session);
     }
 }
