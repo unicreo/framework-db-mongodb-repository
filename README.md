@@ -1,7 +1,7 @@
 # Unicreo.Framework.Db.MongoDB.Repository
 This library is representation of repository pattern in .net core for MongoDB using for internal need of company.
 
-Based on MongoDb.Driver 2.10.2
+Based on MongoDb.Driver 2.12.4 and .net 5
 
 [![NuGet](https://img.shields.io/nuget/v/Unicreo.Framework.Db.MongoDB.Repository)](https://www.nuget.org/packages/Unicreo.Framework.Db.MongoDB.Repository/)
 ## Install
